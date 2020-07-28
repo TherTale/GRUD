@@ -47,17 +47,17 @@ $this->add(
             )
         );
 $this->add(
- 'email', new PresenceOf(
-  array(
-   'message' => 'Email не введен' ) 
-) 
-);
-$this->add(
  'email', new Email(
   array(
    'message' => 'Неправильно введен Email' )
     )
      );
+$this->add(
+ 'email', new PresenceOf(
+  array(
+   'message' => 'Email не введен' ) 
+) 
+);
 
 //Проверка пароля
 $this->add(
