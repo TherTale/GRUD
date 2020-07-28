@@ -5,6 +5,8 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\ExclusionIn as ExclusionIn;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Regex as RegexValidator;
+use Phalcon\Validation\Validator\StringLength as StringLength;
+
 
 
 class MyValidation extends Validation 
@@ -17,7 +19,15 @@ class MyValidation extends Validation
 		foreach($users as $user){
     $arrayUserName[] = $user->name;
 }
-
+$this->add(
+ 'name', new StringLength(
+  array(
+    'max' => 25,
+     'min' => 6,
+   'messageMaximum' => 'Имя пользователя должно быть меньше 25 символов',
+   'messageMinimum' => 'Имя пользователя должно быть больше 6 символов' )
+    )
+     );
 $this->add(
 	 'name', new PresenceOf(
 	  array(
@@ -49,7 +59,7 @@ $this->add(
 $this->add(
  'email', new Email(
   array(
-   'message' => 'Неправильно введен Email' )
+   'message' => 'Некоректный Email адрес')
     )
      );
 $this->add(
@@ -58,8 +68,30 @@ $this->add(
    'message' => 'Email не введен' ) 
 ) 
 );
-
 //Проверка пароля
+$this->add(
+'password', new  RegexValidator(
+array(
+'message' => 'В пароле допускаются только цифры и латинские символы',
+'pattern' => '/[a-zA-Z0-9]{6,50}/')
+)
+);
+$this->add(
+ 'password', new StringLength(
+  array(
+    'max' => 25,
+     'min' => 6,
+   'messageMaximum' => 'Пароль должен быть меньше 25 символов',
+   'messageMinimum' => 'Пароль должен быть больше 6 символов' )
+    )
+     );
+$this->add(
+ 'password', new PresenceOf(
+  array(
+   'message' => 'Пароль не введен' )
+    )
+     );
+
 $this->add(
 'confirmPassword', new Confirmation(
 array(
@@ -67,20 +99,6 @@ array(
 'with' => 'password')
 )
 );
-
-$this->add(
-'password', new  RegexValidator(
-array(
-'message' => 'Неправильный вид пароля',
-'pattern' => '/[a-zA-Z0-9]{6,50}/')
-)
-);
-$this->add(
- 'password', new PresenceOf(
-  array(
-   'message' => 'Пароль не введен' )
-    )
-     );
 
     }
 }
