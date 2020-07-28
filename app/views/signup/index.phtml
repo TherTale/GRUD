@@ -23,7 +23,15 @@
     	  	<h1 class="text-center"><a class="text-white">Регистрация </a></h1>
             <p><?php $this->flash->output() ?></p>
     		  <label for="email"><a class="text-white">Логин </a></label>
-    		  <input type="text" class="form-control" id="name" placeholder="Введите логин"  name="name">
+
+    		 <?php
+               if(empty($name)) {
+                echo '<input type="text" class="form-control" id="name" placeholder="Введите логин"  name="name"> ';
+            }
+             else{
+                echo '<input type="text" class="form-control  is-invalid " id="name" placeholder="Введите логин"  name="name"> ';
+             } ?>
+               <p class="text-danger"><?php if(empty($name)==false){echo $name;} ?></p>
     	    </div>
     	  </div>
     	  	
@@ -31,8 +39,14 @@
     	  	<div class="col-md-4"></div>
     	  	<div class="col-md-4" style="background-color: #2e5179">
     		  <label for="email"><a class="text-white">Email адрес </a></label>
-    		  <input type="email" class="form-control" id="email" placeholder="Введите email"  name="email">
-    		  
+
+    		 <?php
+               if(empty($email) ){
+              echo '<input type="email" class="form-control" id="email" placeholder="Введите email"  name="email">';
+          }else{
+            echo '<input type="email" class="form-control  is-invalid" id="email" placeholder="Введите email"  name="email">';
+          } ?>
+          <p class="text-danger"><?php if(empty($email)==false){echo $email;} ?></p>
     		
 			</div>
 			</div>
@@ -40,7 +54,15 @@
     	  	<div class="col-md-4"></div>
     	  	<div class="col-md-4" style="background-color: #2e5179">
     		  <label for="password"><a class="text-white">Пароль</a></label>
-    		  <input type="password" class="form-control" id="password" placeholder="Введите пароль" name="password">
+
+              <?php 
+              if(empty($password) ){
+               echo '<input type="password" class="form-control" id="password" placeholder="Введите пароль" name="password">';
+              }else{
+                echo '<input type="password" class="form-control  is-invalid" id="password" placeholder="Введите пароль" name="password">';
+              }
+              ?>
+              <p class="text-danger"><?php if(empty($password)==false){echo $password;} ?></p>
 
 
               </div>
@@ -49,7 +71,15 @@
             <div class="col-md-4"></div>
             <div class="col-md-4" style="background-color: #2e5179">
               <label for="confirmPassword"><a class="text-white">Повторите пароль </a></label>
-              <input type="Password" class="form-control" id="confirmPassword" placeholder="Повторите пароль" name="confirmPassword">
+
+              <?php 
+              if( empty($confirmPassword) ){
+              echo  '<input type="Password" class="form-control" id="confirmPassword" placeholder="Повторите пароль" name="confirmPassword">';
+          }else{
+            echo  '<input type="Password" class="form-control  is-invalid" id="confirmPassword" placeholder="Повторите пароль" name="confirmPassword">';
+          } 
+          ?>
+          <p class="text-danger"><?php if(empty($confirmPassword)==false ){echo $confirmPassword;} ?></p>
     		  
     		  <br>
     		  <?php echo $this->tag->submitButton(["Регистрация", 'class' => 'btn btn-secondary btn-block','style' =>'border: 2px solid black']); ?>

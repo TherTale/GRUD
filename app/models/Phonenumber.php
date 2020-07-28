@@ -2,7 +2,7 @@
 
 use Phalcon\Mvc\Model;
 
-class PhoneNumber extends Model{
+class Phonenumber extends Model{
 	
 
 public $id;
@@ -26,7 +26,7 @@ public $idTypePhoneNumber;
         );
 		$this->belongsTo(
             'idTypePhoneNumber',
-            'TypePhoneNumber',
+            'Typephonenumber',
             'id',
 			['alias' => 'TypeNumber']
         );

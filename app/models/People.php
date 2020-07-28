@@ -33,14 +33,14 @@ public $apNumber;
 			
 		$this->hasMany(
 				'id',
-				'PeopleGroup',
+				'Peoplegroup',
 				'idPeople',
 				['alias' => 'Peoplegroup']
 			);
 			
 		$this->hasManyToMany(
             'id',
-            'PeopleGroup',
+            'Peoplegroup',
             'idPeople', 'idGroup',
             'Group',
             'id',

@@ -14,7 +14,7 @@ class PhonebookController extends ControllerBase
     public function indexAction()
     {
 
-		$types = TypePhoneNumber::find();
+		$types = Typephonenumber::find();
 		$this->view->types = $types;
 		
 		$groups = Group::find();
@@ -42,7 +42,7 @@ class PhonebookController extends ControllerBase
 			$this->persistent->searchParams = $this->request->getPost();
 		}
 		
-		if($this->request->isPost() || isset($_GET['page'])){
+		
 		$ppls = $this->modelsManager->createBuilder();
 		$ppls->from('Phonenumber');
 		$ppls->where('People.name LIKE :name:', ['name' => $this->persistent->searchParams['name'].'%']);
@@ -63,30 +63,6 @@ class PhonebookController extends ControllerBase
 		#$ppls->andWhere('People.note LIKE \''.$this->request->getPost()['note'].'%\'');
 		$ppls->join('People');	
 		$ppls->getQuery();
-		
-		}else{
-		$ppls = $this->modelsManager->createBuilder();
-		$ppls->from('Phonenumber');
-		$ppls->where('People.name LIKE :name:', ['name' => '%']);
-		$ppls->andWhere('Phonenumber.phoneNumber LIKE :phone:', ['phone' => '%']);
-		$ppls->andWhere('People.secondName LIKE :lastName:', ['lastName' => '%']);
-		$ppls->andWhere('People.patronomic LIKE :fatherName:', ['fatherName' => '%']);
-		$ppls->andWhere('People.mail LIKE :email:', ['email' => '%']);
-		$ppls->andWhere('People.organizationName LIKE :orgName:', ['orgName' => '%']);
-		$ppls->andWhere('People.city LIKE :city:', ['city' => '%']);
-		$ppls->andWhere('People.street LIKE :street:', ['street' => '%']);
-		$ppls->andWhere('People.house LIKE :house:', ['house' => '%']);
-		$ppls->andWhere('People.apNumber LIKE :ap:', ['ap' => '%']);
-		$ppls->andWhere('People.chosen LIKE :important:', ['important' => '%']);
-		if($this->persistent->searchParams['typeNumber']!=0)$ppls->andWhere('Phonenumber.idTypePhoneNumber LIKE :typeNumber:', ['typeNumber' => '%']);
-		
-		if (!empty($this->request->getPost()['birth']))$ppls->andWhere('People.birth LIKE \''.$this->persistent->searchParams['birth'].'%\'');
-		
-		#$ppls->andWhere('People.note LIKE \''.$this->request->getPost()['note'].'%\'');
-		$ppls->join('People');	
-		$ppls->getQuery();
-			
-		}
 		$paginator = new Paginator(
 			array(
 				"builder" => $ppls,
@@ -97,7 +73,7 @@ class PhonebookController extends ControllerBase
 
 		$page = $paginator->Paginate();
 		$this->view->page = $page;
-		$types = TypePhoneNumber::find();
+		$types = Typephonenumber::find();
 		$this->view->types = $types;
 		$groups = Group::find();
 		$this->view->groups = $groups;
@@ -107,7 +83,7 @@ class PhonebookController extends ControllerBase
 	public function newAction()
 	{
 
-		$types = TypePhoneNumber::find();
+		$types = Typephonenumber::find();
 		$this->view->types = $types;
 		
 		$groups = Group::find();
@@ -117,24 +93,24 @@ class PhonebookController extends ControllerBase
 	public function editAction($number)
 	{
 			
-			$phoneNumber = PhoneNumber::findFirst('phoneNumber = \''.addslashes($number).'\'');
+			$phonenumber = Phonenumber::findFirst('phoneNumber = \''.$number.'\'');
 			
-			$people = People::findFirst('id = \''.addslashes($phoneNumber->idPeople).'\'');
+			$people = People::findFirst('id = \''.$phonenumber->idPeople.'\'');
 			
-			$people->name = addslashes($this->request->getPost()['name']);
+			$people->name = $this->request->getPost()['name'];
 			
-			$people->secondName = addslashes($this->request->getPost()['secondName']);
+			$people->secondName = $this->request->getPost()['secondName'];
 			
-			$people->patronomic = addslashes($this->request->getPost()['fatherName']);
-			$people->mail = addslashes($this->request->getPost()['mail']);
+			$people->patronomic = $this->request->getPost()['fatherName'];
+			$people->mail = $this->request->getPost()['mail'];
 			
-			$people->organizationName = addslashes($this->request->getPost()['orgName']);
-			$people->city = addslashes($this->request->getPost()['city']);
-			$people->street = addslashes($this->request->getPost()['street']);
+			$people->organizationName = $this->request->getPost()['orgName'];
+			$people->city = $this->request->getPost()['city'];
+			$people->street = $this->request->getPost()['street'];
 			
-			$people->house = addslashes($this->request->getPost()['house']);
-			$people->apNumber =addslashes( $this->request->getPost()['ap']);
-			$people->birth = empty($this->request->getPost()['birth']) ? NULL:addslashes($this->request->getPost()['birth']);
+			$people->house = $this->request->getPost()['house'];
+			$people->apNumber = $this->request->getPost()['ap'];
+			$people->birth = empty($this->request->getPost()['birth']) ? NULL:$this->request->getPost()['birth'];
 			
 			
 			$people->peoplegroup->delete();
@@ -143,8 +119,8 @@ class PhonebookController extends ControllerBase
 			
 			
 		
-		
-			
+			$group = new Group();
+			$group->name = 'Test';
 			$groups = Group::find([
 				'id IN ({letter:array})',
 				'bind' => [
@@ -159,10 +135,10 @@ class PhonebookController extends ControllerBase
 		
 		}
 			$success = $people->save();
-			$phoneNumber->phoneNumber = $this->request->getPost()['phone'];
-			$phoneNumber->idTypePhoneNumber = $this->request->getPost()['typeNumber'];
+			$phonenumber->phoneNumber = $this->request->getPost()['phone'];
+			$phonenumber->idTypePhoneNumber = $this->request->getPost()['typeNumber'];
 			
-			$success = $phoneNumber->save();
+			$success = $phonenumber->save();
 			if ($success) {
 				$this->flash->success(
                 'Контакт успешно обновлён'
@@ -182,26 +158,26 @@ class PhonebookController extends ControllerBase
 			
 	$people = new people();
 		
-		$people->name = addslashes($this->request->getPost()['name']);
-		$people->email = addslashes($this->request->getPost()['email']);
-		$people->secondName = addslashes($this->request->getPost()['lastName']);
+		$people->name = $this->request->getPost()['name'];
+		$people->email = $this->request->getPost()['email'];
+		$people->secondName = $this->request->getPost()['lastName'];
 		
-		$people->patronomic = addslashes($this->request->getPost()['fatherName']);
-		$people->mail = addslashes($this->request->getPost()['email']);
-		$people->note = addslashes($this->request->getPost()['note']);
+		$people->patronomic = $this->request->getPost()['fatherName'];
+		$people->mail = $this->request->getPost()['email'];
+		$people->note = $this->request->getPost()['note'];
 	
-		$people->chosen = isset($this->request->getPost()['important'])       ? addslashes($this->request->getPost()['important']) : '0';
+		$people->chosen = isset($this->request->getPost()['important'])       ? $this->request->getPost()['important'] : '0';
 		
 		
 		
-		$people->organizationName = addslashes($this->request->getPost()['orgName']);
-		$people->city = addslashes($this->request->getPost()['city']);
-		$people->street = addslashes($this->request->getPost()['street']);
+		$people->organizationName = $this->request->getPost()['orgName'];
+		$people->city = $this->request->getPost()['city'];
+		$people->street = $this->request->getPost()['street'];
 		
-		$people->house = addslashes($this->request->getPost()['house']);
-		$people->apNumber = addslashes($this->request->getPost()['ap']);
+		$people->house = $this->request->getPost()['house'];
+		$people->apNumber = $this->request->getPost()['ap'];
 		
-		$people->birth = empty($this->request->getPost()['birth']) ? NULL: addslashes($this->request->getPost()['birth']);
+		$people->birth = empty($this->request->getPost()['birth']) ? NULL:$this->request->getPost()['birth'];
 		
 		
 		if(isset($this->request->getPost()['groups'])){
@@ -231,13 +207,13 @@ class PhonebookController extends ControllerBase
 		$success = $people->save();
 		if ($success) {
 			
-			$phoneNumber = new PhoneNumber();
+			$phonenumber = new phonenumber();
 	
-			$phoneNumber->phoneNumber = addslashes($this->request->getPost()['phone']);
-			$phoneNumber->idTypePhoneNumber = addslashes($this->request->getPost()['typeNumber']);
-			$phoneNumber->idPeople = $people->id;
-			$phoneNumber->idOperator = 1;
-			$success2 = $phoneNumber->save();
+			$phonenumber->phoneNumber = $this->request->getPost()['phone'];
+			$phonenumber->idTypePhoneNumber = $this->request->getPost()['typeNumber'];
+			$phonenumber->idPeople = $people->id;
+			$phonenumber->idOperator = 1;
+			$success2 = $phonenumber->save();
 			if ($success2) {
 				$this->flash->success(
                 'Контакт успешно добавлен'
@@ -250,7 +226,7 @@ class PhonebookController extends ControllerBase
         );
 			}else {
 				$this->flash->error(
-                'Ошибка при добавление контакта.Введите номер контакта'
+                'Ошибка при добавление контакта'
             );
 				return $this->dispatcher->forward(
             [
@@ -261,7 +237,7 @@ class PhonebookController extends ControllerBase
 			}
 		} else {
 				$this->flash->error(
-                'Ошибка при добавление контакта.Введите имя контакта'
+                'Введите имя контакта'
             );
 				return $this->dispatcher->forward(
             [
@@ -281,7 +257,7 @@ class PhonebookController extends ControllerBase
 
 	public function deleteAction($number)
 	{
-		$Phone = PhoneNumber::find('phoneNumber = \''.$number.'\'');
+		$Phone = Phonenumber::find('phoneNumber = \''.$number.'\'');
 
 		if ($Phone !== false) {
 			if ($Phone->delete() === false) {

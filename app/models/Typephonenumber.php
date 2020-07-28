@@ -2,7 +2,7 @@
 
 use Phalcon\Mvc\Model;
 
-class TypePhoneNumber extends Model{
+class Typephonenumber extends Model{
 	
 public $id;
 public $name;
