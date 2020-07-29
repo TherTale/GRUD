@@ -45,7 +45,6 @@ class SignupController extends Controller
             ]
         );
    }else{
-
         $user->name = $this->request->getPost()['name'];
         $user->email = $this->request->getPost()['email'];
         $user->password = password_hash($this->request->getPost()['password'], PASSWORD_DEFAULT);

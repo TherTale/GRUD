@@ -19,6 +19,9 @@ class MyValidation extends Validation
 		foreach($users as $user){
     $arrayUserName[] = $user->name;
 }
+if(empty($arrayUserName)==true){
+  $arrayUserName[]=null;
+}
 $this->add(
  'name', new StringLength(
   array(
@@ -42,11 +45,13 @@ $this->add(
                 ]
             )
         );
-
 //Проверка Email 
 $users = User::Find();
 foreach($users as $user){
     $arrayUserEmail[] = $user->email;
+}
+if(empty($arrayUserEmail)==true){
+  $arrayUserEmail[]=null;
 }
 $this->add(
 	'email',new ExclusionIn(
